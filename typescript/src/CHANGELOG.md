@@ -1,5 +1,33 @@
 # CDP SDK Changelog
 
+## 1.25.0
+
+### Minor Changes
+
+- [#275](https://github.com/coinbase/cdp-sdk/pull/275) [`64073d0`](https://github.com/coinbase/cdp-sdk/commit/64073d09dc620117b25a3a981f7d52fa3b0db755) Thanks [@sddioulde](https://github.com/sddioulde)! - Added listTokenBalances to retrieve SOL and SPL token balances for a Solana account
+
+## 1.24.0
+
+### Minor Changes
+
+- [#267](https://github.com/coinbase/cdp-sdk/pull/267) [`a0030c7`](https://github.com/coinbase/cdp-sdk/commit/a0030c7753611457082b13d953f09358ac1b3f29) Thanks [@superadi04](https://github.com/superadi04)! - Added updateSmartAccount to EvmClient
+
+- [#270](https://github.com/coinbase/cdp-sdk/pull/270) [`dc7ee1a`](https://github.com/coinbase/cdp-sdk/commit/dc7ee1a07862f79f3db8541e6327b3f0fffb34fe) Thanks [@sammccord](https://github.com/sammccord)! - Added support for sendUserOperation, prepareUserOperation policy rules, and added policies to EVM Smart Account models
+
+### Patch Changes
+
+- [#271](https://github.com/coinbase/cdp-sdk/pull/271) [`ce4771c`](https://github.com/coinbase/cdp-sdk/commit/ce4771c95f52e11c1ab0911d9c49a52fbe3bac69) Thanks [@0xRAG](https://github.com/0xRAG)! - Added ability to pass address in getUserOperation on EvmClient
+
+## 1.23.0
+
+### Minor Changes
+
+- [#264](https://github.com/coinbase/cdp-sdk/pull/264) [`09ce300`](https://github.com/coinbase/cdp-sdk/commit/09ce300a773d1b9b63c97677ee1a5e4e4ee27c60) Thanks [@0xRAG](https://github.com/0xRAG)! - Added support for policy creation on signTypedData operations
+
+### Patch Changes
+
+- [#262](https://github.com/coinbase/cdp-sdk/pull/262) [`d4039e9`](https://github.com/coinbase/cdp-sdk/commit/d4039e9d5b0910c601e649f60506559c9b6205b3) Thanks [@0xRAG](https://github.com/0xRAG)! - Update smartAccount#transfer type to include optional paymasterUrl
+
 ## 1.22.0
 
 ### Minor Changes

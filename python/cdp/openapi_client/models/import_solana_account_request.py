@@ -28,10 +28,9 @@ class ImportSolanaAccountRequest(BaseModel):
     """
     ImportSolanaAccountRequest
     """ # noqa: E501
-    encrypted_private_key: StrictStr = Field(description="The base64-encoded, encrypted private key of the Solana account. The private key must be encrypted using the CDP SDK's encryption scheme.", alias="encryptedPrivateKey")
-    name: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="An optional name for the account. Account names can consist of alphanumeric characters and hyphens, and be between 2 and 36 characters long. Account names must be unique across all Solana accounts in the developer's CDP Project.")
-    account_policy: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="The ID of the account-level policy to apply to the account.", alias="accountPolicy")
-    __properties: ClassVar[List[str]] = ["encryptedPrivateKey", "name", "accountPolicy"]
+    encrypted_private_key: StrictStr = Field(description="The base64-encoded, encrypted 32-byte private key of the Solana account. The private key must be encrypted using the CDP SDK's encryption scheme.", alias="encryptedPrivateKey")
+    name: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="An optional name for the account. Account names can consist of alphanumeric characters and hyphens, and be between 2 and 36 characters long. Account names must be unique across all EVM accounts in the developer's CDP Project.")
+    __properties: ClassVar[List[str]] = ["encryptedPrivateKey", "name"]
 
     @field_validator('name')
     def name_validate_regular_expression(cls, value):
@@ -41,16 +40,6 @@ class ImportSolanaAccountRequest(BaseModel):
 
         if not re.match(r"^[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$", value):
             raise ValueError(r"must validate the regular expression /^[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$/")
-        return value
-
-    @field_validator('account_policy')
-    def account_policy_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if value is None:
-            return value
-
-        if not re.match(r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", value):
-            raise ValueError(r"must validate the regular expression /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/")
         return value
 
     model_config = ConfigDict(
@@ -77,7 +66,8 @@ class ImportSolanaAccountRequest(BaseModel):
     def to_dict(self) -> Dict[str, Any]:
         """Return the dictionary representation of the model using alias.
 
-        This has the following differences from the `dict()` function:
+        This has the following differences from calling pydantic's
+        `self.model_dump(by_alias=True)`:
 
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
@@ -104,7 +94,8 @@ class ImportSolanaAccountRequest(BaseModel):
 
         _obj = cls.model_validate({
             "encryptedPrivateKey": obj.get("encryptedPrivateKey"),
-            "name": obj.get("name"),
-            "accountPolicy": obj.get("accountPolicy")
+            "name": obj.get("name")
         })
-        return _obj 
+        return _obj
+
+

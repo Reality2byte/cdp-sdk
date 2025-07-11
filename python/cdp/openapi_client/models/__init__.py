@@ -57,6 +57,9 @@ from cdp.openapi_client.models.evm_message_criterion import EvmMessageCriterion
 from cdp.openapi_client.models.evm_network_criterion import EvmNetworkCriterion
 from cdp.openapi_client.models.evm_smart_account import EvmSmartAccount
 from cdp.openapi_client.models.evm_swaps_network import EvmSwapsNetwork
+from cdp.openapi_client.models.evm_typed_address_condition import EvmTypedAddressCondition
+from cdp.openapi_client.models.evm_typed_numerical_condition import EvmTypedNumericalCondition
+from cdp.openapi_client.models.evm_typed_string_condition import EvmTypedStringCondition
 from cdp.openapi_client.models.evm_user_operation import EvmUserOperation
 from cdp.openapi_client.models.export_evm_account200_response import ExportEvmAccount200Response
 from cdp.openapi_client.models.export_evm_account_request import ExportEvmAccountRequest
@@ -74,6 +77,8 @@ from cdp.openapi_client.models.list_evm_token_balances_network import ListEvmTok
 from cdp.openapi_client.models.list_policies200_response import ListPolicies200Response
 from cdp.openapi_client.models.list_response import ListResponse
 from cdp.openapi_client.models.list_solana_accounts200_response import ListSolanaAccounts200Response
+from cdp.openapi_client.models.list_solana_token_balances200_response import ListSolanaTokenBalances200Response
+from cdp.openapi_client.models.list_solana_token_balances_network import ListSolanaTokenBalancesNetwork
 from cdp.openapi_client.models.payment_method import PaymentMethod
 from cdp.openapi_client.models.payment_method_limits import PaymentMethodLimits
 from cdp.openapi_client.models.payment_method_limits_source_limit import PaymentMethodLimitsSourceLimit
@@ -82,6 +87,7 @@ from cdp.openapi_client.models.payment_method_request import PaymentMethodReques
 from cdp.openapi_client.models.payment_rail_action import PaymentRailAction
 from cdp.openapi_client.models.policy import Policy
 from cdp.openapi_client.models.prepare_user_operation_request import PrepareUserOperationRequest
+from cdp.openapi_client.models.prepare_user_operation_rule import PrepareUserOperationRule
 from cdp.openapi_client.models.request_evm_faucet200_response import RequestEvmFaucet200Response
 from cdp.openapi_client.models.request_evm_faucet_request import RequestEvmFaucetRequest
 from cdp.openapi_client.models.request_solana_faucet200_response import RequestSolanaFaucet200Response
@@ -92,6 +98,7 @@ from cdp.openapi_client.models.send_evm_transaction_criteria_inner import SendEv
 from cdp.openapi_client.models.send_evm_transaction_request import SendEvmTransactionRequest
 from cdp.openapi_client.models.send_evm_transaction_rule import SendEvmTransactionRule
 from cdp.openapi_client.models.send_user_operation_request import SendUserOperationRequest
+from cdp.openapi_client.models.send_user_operation_rule import SendUserOperationRule
 from cdp.openapi_client.models.sign_evm_hash200_response import SignEvmHash200Response
 from cdp.openapi_client.models.sign_evm_hash_request import SignEvmHashRequest
 from cdp.openapi_client.models.sign_evm_hash_rule import SignEvmHashRule
@@ -104,6 +111,13 @@ from cdp.openapi_client.models.sign_evm_transaction_criteria_inner import SignEv
 from cdp.openapi_client.models.sign_evm_transaction_request import SignEvmTransactionRequest
 from cdp.openapi_client.models.sign_evm_transaction_rule import SignEvmTransactionRule
 from cdp.openapi_client.models.sign_evm_typed_data200_response import SignEvmTypedData200Response
+from cdp.openapi_client.models.sign_evm_typed_data_criteria_inner import SignEvmTypedDataCriteriaInner
+from cdp.openapi_client.models.sign_evm_typed_data_field_criterion import SignEvmTypedDataFieldCriterion
+from cdp.openapi_client.models.sign_evm_typed_data_field_criterion_conditions_inner import SignEvmTypedDataFieldCriterionConditionsInner
+from cdp.openapi_client.models.sign_evm_typed_data_field_criterion_types import SignEvmTypedDataFieldCriterionTypes
+from cdp.openapi_client.models.sign_evm_typed_data_field_criterion_types_types_value_inner import SignEvmTypedDataFieldCriterionTypesTypesValueInner
+from cdp.openapi_client.models.sign_evm_typed_data_rule import SignEvmTypedDataRule
+from cdp.openapi_client.models.sign_evm_typed_data_verifying_contract_criterion import SignEvmTypedDataVerifyingContractCriterion
 from cdp.openapi_client.models.sign_sol_transaction_criteria_inner import SignSolTransactionCriteriaInner
 from cdp.openapi_client.models.sign_sol_transaction_rule import SignSolTransactionRule
 from cdp.openapi_client.models.sign_solana_message200_response import SignSolanaMessage200Response
@@ -112,6 +126,9 @@ from cdp.openapi_client.models.sign_solana_transaction200_response import SignSo
 from cdp.openapi_client.models.sign_solana_transaction_request import SignSolanaTransactionRequest
 from cdp.openapi_client.models.sol_address_criterion import SolAddressCriterion
 from cdp.openapi_client.models.solana_account import SolanaAccount
+from cdp.openapi_client.models.solana_token import SolanaToken
+from cdp.openapi_client.models.solana_token_amount import SolanaTokenAmount
+from cdp.openapi_client.models.solana_token_balance import SolanaTokenBalance
 from cdp.openapi_client.models.swap_unavailable_response import SwapUnavailableResponse
 from cdp.openapi_client.models.token import Token
 from cdp.openapi_client.models.token_amount import TokenAmount
@@ -121,5 +138,6 @@ from cdp.openapi_client.models.transfer import Transfer
 from cdp.openapi_client.models.transfer_source import TransferSource
 from cdp.openapi_client.models.transfer_target import TransferTarget
 from cdp.openapi_client.models.update_evm_account_request import UpdateEvmAccountRequest
+from cdp.openapi_client.models.update_evm_smart_account_request import UpdateEvmSmartAccountRequest
 from cdp.openapi_client.models.update_policy_request import UpdatePolicyRequest
 from cdp.openapi_client.models.update_solana_account_request import UpdateSolanaAccountRequest

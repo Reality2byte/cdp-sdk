@@ -94,7 +94,9 @@ async function ensureSufficientSolBalance(cdp: CdpClient, account: SolanaAccount
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  const connection = new Connection("https://api.devnet.solana.com");
+  const connection = new Connection(
+    process.env.CDP_E2E_SOLANA_RPC_URL ?? "https://api.devnet.solana.com",
+  );
   let balance = await connection.getBalance(new PublicKey(account.address));
 
   // 1250000 is the amount the faucet gives, and is plenty to cover gas
@@ -524,7 +526,7 @@ describe("CDP Client E2E Tests", () => {
     const owner = privateKeyToAccount(privateKey);
 
     const smartAccount = await cdp.evm.createSmartAccount({
-      owner: owner,
+      owner,
     });
     expect(smartAccount).toBeDefined();
 
@@ -534,9 +536,47 @@ describe("CDP Client E2E Tests", () => {
 
     const retrievedSmartAccount = await cdp.evm.getSmartAccount({
       address: smartAccount.address,
-      owner: owner,
+      owner,
     });
     expect(retrievedSmartAccount).toBeDefined();
+  });
+
+  it("should update an EVM smart account", async () => {
+    // Create a new smart account to update
+    const privateKey = generatePrivateKey();
+    const owner = privateKeyToAccount(privateKey);
+    const originalName = generateRandomName();
+
+    const smartAccountToUpdate = await cdp.evm.createSmartAccount({
+      owner,
+      name: originalName,
+    });
+    expect(smartAccountToUpdate).toBeDefined();
+    expect(smartAccountToUpdate.name).toBe(originalName);
+
+    // Update the smart account with a new name
+    const updatedName = generateRandomName();
+    const updatedSmartAccount = await cdp.evm.updateSmartAccount({
+      address: smartAccountToUpdate.address,
+      owner,
+      update: {
+        name: updatedName,
+      },
+    });
+
+    // Verify the update was successful
+    expect(updatedSmartAccount).toBeDefined();
+    expect(updatedSmartAccount.address).toBe(smartAccountToUpdate.address);
+    expect(updatedSmartAccount.name).toBe(updatedName);
+
+    // Verify we can get the updated smart account by its new name
+    const retrievedSmartAccount = await cdp.evm.getSmartAccount({
+      name: updatedName,
+      owner,
+    });
+    expect(retrievedSmartAccount).toBeDefined();
+    expect(retrievedSmartAccount.address).toBe(smartAccountToUpdate.address);
+    expect(retrievedSmartAccount.name).toBe(updatedName);
   });
 
   it("should prepare user operation", async () => {
@@ -764,6 +804,41 @@ describe("CDP Client E2E Tests", () => {
     expect(secondPage.balances[0].token).toBeDefined();
     expect(secondPage.balances[0].token.contractAddress).toBeDefined();
     expect(secondPage.balances[0].token.network).toEqual("base-sepolia");
+    expect(secondPage.balances[0].amount).toBeDefined();
+    expect(secondPage.balances[0].amount.amount).toBeDefined();
+    expect(secondPage.balances[0].amount.decimals).toBeDefined();
+  });
+
+  it("should list solana token balances", async () => {
+    const address = "4PkiqJkUvxr9P8C1UsMqGN8NJsUcep9GahDRLfmeu8UK";
+
+    const firstPage = await cdp.solana.listTokenBalances({
+      address,
+      network: "solana-devnet",
+      pageSize: 1,
+    });
+
+    expect(firstPage).toBeDefined();
+    expect(firstPage.balances.length).toEqual(1);
+    expect(firstPage.balances[0].token).toBeDefined();
+    expect(firstPage.balances[0].token.mintAddress).toBeDefined();
+    expect(firstPage.balances[0].token.name).toBeDefined();
+    expect(firstPage.balances[0].token.symbol).toBeDefined();
+    expect(firstPage.balances[0].amount).toBeDefined();
+    expect(firstPage.balances[0].amount.amount).toBeDefined();
+    expect(firstPage.balances[0].amount.decimals).toBeDefined();
+
+    const secondPage = await cdp.solana.listTokenBalances({
+      address,
+      network: "solana-devnet",
+      pageSize: 1,
+      pageToken: firstPage.nextPageToken,
+    });
+
+    expect(secondPage).toBeDefined();
+    expect(secondPage.balances.length).toEqual(1);
+    expect(secondPage.balances[0].token).toBeDefined();
+    expect(secondPage.balances[0].token.mintAddress).toBeDefined();
     expect(secondPage.balances[0].amount).toBeDefined();
     expect(secondPage.balances[0].amount.amount).toBeDefined();
     expect(secondPage.balances[0].amount.decimals).toBeDefined();
@@ -1098,7 +1173,9 @@ describe("CDP Client E2E Tests", () => {
     });
 
     describe("transfer", () => {
-      const connection = new Connection("https://api.devnet.solana.com");
+      const connection = new Connection(
+        process.env.CDP_E2E_SOLANA_RPC_URL ?? "https://api.devnet.solana.com",
+      );
 
       it("should transfer native SOL and wait for confirmation", async () => {
         const { signature } = await testSolanaAccount.transfer({

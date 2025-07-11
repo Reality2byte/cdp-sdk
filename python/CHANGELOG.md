@@ -2,6 +2,28 @@
 
 <!-- towncrier release notes start -->
 
+## [1.22.0] - 2025-07-10
+
+### Features
+
+- Added list_token_balances on Solana to get SOL and SPL token balances ([#277](https://github.com/coinbase/cdp-sdk/pull/277))
+
+
+## [1.21.0] - 2025-07-09
+
+### Features
+
+- Added updateSmartAccount to EvmClient ([#267](https://github.com/coinbase/cdp-sdk/pull/267))
+- Added sendUserOperation, prepareUserOperation policy rules and EVM Smart Account policies ([#270](https://github.com/coinbase/cdp-sdk/pull/270))
+
+
+## [1.20.0] - 2025-07-08
+
+### Features
+
+- Added support for policy creation on signTypedData operations ([#264](https://github.com/coinbase/cdp-sdk/pull/264))
+
+
 ## [1.19.0] - 2025-07-01
 
 ### Features

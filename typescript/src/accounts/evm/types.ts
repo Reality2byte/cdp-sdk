@@ -132,7 +132,7 @@ export type EvmServerAccount = Prettify<
     }
 >;
 
-type EvmSmartAccountProperties = {
+export type EvmSmartAccountProperties = {
   /** The smart account's address. */
   address: Address;
   /** The name of the smart account. */
@@ -141,6 +141,8 @@ type EvmSmartAccountProperties = {
   owners: EvmAccount[];
   /** Identifier for the smart account type. */
   type: "evm-smart";
+  /** The list of policy IDs that apply to the smart account. This will include both the project-level policy and the account-level policy, if one exists. */
+  policies: string[] | undefined;
   /**
    * A function that returns a network-scoped smart account.
    *
@@ -171,7 +173,7 @@ type DistributedOmit<T, K extends PropertyKey> = T extends any ? Omit<T, K> : ne
 /**
  * Helper type for network-specific smart account actions
  */
-type NetworkSpecificSmartAccountActions<Network extends string> = Prettify<
+export type NetworkSpecificSmartAccountActions<Network extends string> = Prettify<
   // Always include sendUserOperation, waitForUserOperation and getUserOperation
   {
     sendUserOperation: <const callData extends unknown[]>(
@@ -259,7 +261,7 @@ type EmptyObject = {};
 /**
  * Conditional account actions based on network
  */
-type NetworkSpecificAccountActions<Network extends string> = Prettify<
+export type NetworkSpecificAccountActions<Network extends string> = Prettify<
   // Always include sendTransaction, transfer and waitForTransactionReceipt
   {
     sendTransaction: (

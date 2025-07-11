@@ -21,6 +21,7 @@ from cdp.evm_local_account import EvmLocalAccount
 from cdp.evm_transaction_types import TransactionRequestEIP1559
 from cdp.openapi_client.errors import ApiError
 from cdp.openapi_client.models.eip712_domain import EIP712Domain
+from cdp.openapi_client.models.update_evm_smart_account_request import UpdateEvmSmartAccountRequest
 from cdp.policies.types import (
     CreatePolicyOptions,
     EthValueCriterion,
@@ -565,6 +566,44 @@ async def test_create_get_and_list_solana_accounts(cdp_client):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
+async def test_list_solana_token_balances(cdp_client):
+    """Test listing solana token balances."""
+    address = "4PkiqJkUvxr9P8C1UsMqGN8NJsUcep9GahDRLfmeu8UK"
+
+    first_page = await cdp_client.solana.list_token_balances(
+        address=address,
+        network="solana-devnet",
+        page_size=1,
+    )
+    assert first_page is not None
+    assert len(first_page.balances) == 1
+    assert first_page.balances[0].token is not None
+    assert first_page.balances[0].token.mint_address is not None
+    assert first_page.balances[0].token.name is not None
+    assert first_page.balances[0].token.symbol is not None
+    assert first_page.balances[0].amount is not None
+    assert first_page.balances[0].amount.amount is not None
+    assert first_page.balances[0].amount.decimals is not None
+
+    if first_page.next_page_token is not None:
+        second_page = await cdp_client.solana.list_token_balances(
+            address=address,
+            network="solana-devnet",
+            page_size=1,
+            page_token=first_page.next_page_token,
+        )
+
+        assert second_page is not None
+        assert len(second_page.balances) == 1
+        assert second_page.balances[0].token is not None
+        assert second_page.balances[0].token.mint_address is not None
+        assert second_page.balances[0].amount is not None
+        assert second_page.balances[0].amount.amount is not None
+        assert second_page.balances[0].amount.decimals is not None
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
 async def test_solana_sign_fns(cdp_client):
     """Test signing functions."""
     account = await cdp_client.solana.create_account()
@@ -780,7 +819,9 @@ async def test_transfer_usdc_smart_account(cdp_client):
 @pytest.mark.asyncio
 async def test_transfer_sol(solana_account):
     """Test transferring SOL."""
-    connection = SolanaClient("https://api.devnet.solana.com")
+    connection = SolanaClient(
+        os.getenv("CDP_E2E_SOLANA_RPC_URL") or "https://api.devnet.solana.com"
+    )
 
     await _ensure_sufficient_sol_balance(cdp_client, solana_account)
 
@@ -806,7 +847,9 @@ async def test_transfer_sol(solana_account):
 @pytest.mark.asyncio
 async def test_solana_account_transfer_usdc(solana_account):
     """Test transferring USDC tokens."""
-    connection = SolanaClient("https://api.devnet.solana.com")
+    connection = SolanaClient(
+        os.getenv("CDP_E2E_SOLANA_RPC_URL") or "https://api.devnet.solana.com"
+    )
 
     await _ensure_sufficient_sol_balance(cdp_client, solana_account)
 
@@ -1510,6 +1553,35 @@ async def test_update_solana_account(cdp_client):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
+async def test_update_evm_smart_account(cdp_client):
+    """Test updating an EVM smart account."""
+    original_name = generate_random_name()
+    owner = Account.create()
+    account = await cdp_client.evm.create_smart_account(name=original_name, owner=owner)
+    assert account is not None
+    assert account.name == original_name
+
+    # Update the account with a new name
+    updated_name = generate_random_name()
+    updated_account = await cdp_client.evm.update_smart_account(
+        address=account.address,
+        update=UpdateEvmSmartAccountRequest(
+            name=updated_name,
+        ),
+        owner=owner,
+    )
+    assert updated_account is not None
+    assert updated_account.name == updated_name
+
+    # Verify we can get the updated account by its new name
+    retrieved_account = await cdp_client.evm.get_smart_account(name=updated_name, owner=owner)
+    assert retrieved_account is not None
+    assert retrieved_account.address == account.address
+    assert retrieved_account.name == updated_name
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
 async def test_evm_local_account_sign_hash(cdp_client):
     """Test signing a hash with an EVM local account."""
     account = await cdp_client.evm.create_account()
@@ -1759,7 +1831,9 @@ def _get_transaction(address: str):
     from solders.pubkey import Pubkey as PublicKey
     from solders.system_program import TransferParams, transfer
 
-    connection = SolanaClient("https://api.devnet.solana.com")
+    connection = SolanaClient(
+        os.getenv("CDP_E2E_SOLANA_RPC_URL") or "https://api.devnet.solana.com"
+    )
 
     source_pubkey = PublicKey.from_string(address)
     dest_pubkey = PublicKey.from_string("3KzDtddx4i53FBkvCzuDmRbaMozTZoJBb1TToWhz3JfE")
@@ -1826,7 +1900,9 @@ async def _ensure_sufficient_eth_balance(cdp_client, account):
 
 async def _ensure_sufficient_sol_balance(cdp_client, account):
     """Ensure an account has sufficient SOL balance."""
-    connection = SolanaClient("https://api.devnet.solana.com")
+    connection = SolanaClient(
+        os.getenv("CDP_E2E_SOLANA_RPC_URL") or "https://api.devnet.solana.com"
+    )
 
     async def sleep(ms):
         await asyncio.sleep(ms / 1000)

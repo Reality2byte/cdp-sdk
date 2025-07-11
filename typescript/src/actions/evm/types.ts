@@ -23,13 +23,13 @@ import type {
   SmartAccountQuoteSwapOptions,
   SmartAccountQuoteSwapResult,
 } from "./swap/types.js";
-import type { TransferOptions } from "./transfer/types.js";
+import type { SmartAccountTransferOptions, TransferOptions } from "./transfer/types.js";
 import type {
   WaitForUserOperationOptions,
   WaitForUserOperationReturnType,
 } from "./waitForUserOperation.js";
 
-type Actions = {
+export type Actions = {
   /**
    * List the token balances of an account.
    *
@@ -427,7 +427,7 @@ export type SmartAccountActions = Actions & {
    * });
    * ```
    */
-  transfer: (options: TransferOptions) => Promise<SendUserOperationReturnType>;
+  transfer: (options: SmartAccountTransferOptions) => Promise<SendUserOperationReturnType>;
 
   /**
    * Sends a user operation.
